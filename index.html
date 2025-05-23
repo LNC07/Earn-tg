@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎯 বিজ্ঞাপন দেখে পয়েন্ট অর্জন করুন</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ad Dekhe Points Income</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,7 +22,7 @@
       border: none;
       cursor: pointer;
       font-size: 18px;
-      margin: 5px;
+      margin: 10px;
     }
     button:hover {
       background-color: #45a049;
@@ -30,105 +31,65 @@
       font-size: 20px;
       margin-top: 10px;
     }
-    #stopButton {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      background: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
+  <h1>🎯 বিজ্ঞাপন দেখে পয়েন্ট ইনকাম করো</h1>
+  <button id="watchAd">📺 একটি বিজ্ঞাপন দেখাও</button>
+  <button id="autoAds">🔁 Auto Ads চালু করো</button>
+  <p>💰 তোমার পয়েন্ট: <span id="points">0</span></p>
 
-  <h1>🎯 বিজ্ঞাপন দেখে পয়েন্ট অর্জন করুন</h1>
-
-  <input type="number" id="user_id" placeholder="আপনার Telegram ID দিন"><br>
-  <button onclick="saveUserId()">ID সংরক্ষণ করুন</button>
-
-  <button id="watchAd">📺 বিজ্ঞাপন দেখুন</button>
-  <button id="autoAds">🔁 স্বয়ংক্রিয় বিজ্ঞাপন</button>
-
-  <p>💰 আপনার পয়েন্ট: <span id="points">0</span></p>
-
-  <!-- Monetag বিজ্ঞাপন স্ক্রিপ্ট -->
+  <!-- Ads SDK -->
   <script src="//whephiwums.com/vignette.min.js" data-zone="8912734" data-sdk="show_8912734"></script>
 
   <script>
-    // পয়েন্ট লোড করা
-    let points = localStorage.getItem("points") || 0;
-    document.getElementById("points").innerText = points;
-
-    function saveUserId() {
-      const userId = document.getElementById("user_id").value;
-      if (!userId) return alert("দয়া করে আপনার Telegram ID দিন");
-      localStorage.setItem("telegram_user_id", userId);
-      alert("✅ Telegram ID সংরক্ষণ করা হয়েছে!");
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      let points = localStorage.getItem("points") || 0;
+      document.getElementById("points").innerText = points;
+    });
 
     function addPoints(amount) {
-      points = parseInt(points) + amount;
+      let points = parseInt(localStorage.getItem("points") || 0);
+      points += amount;
       localStorage.setItem("points", points);
       document.getElementById("points").innerText = points;
-      syncWithBot(amount);
     }
 
-    document.getElementById("watchAd").addEventListener("click", function () {
+    document.getElementById("watchAd").addEventListener("click", () => {
       show_8912734().then(() => {
-        addPoints(1); // প্রতি বিজ্ঞাপনে ১ পয়েন্ট
-        alert("✅ আপনি ১ পয়েন্ট অর্জন করেছেন!");
+        addPoints(10);
+        alert("✅ 10 পয়েন্ট পেয়েছো!");
       }).catch(() => {
-        alert("⚠ বিজ্ঞাপন লোড করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন!");
+        alert("⚠ বিজ্ঞাপন লোড হয়নি!");
       });
     });
 
-    document.getElementById("autoAds").addEventListener("click", function () {
-      alert("🔁 স্বয়ংক্রিয় বিজ্ঞাপন শুরু হয়েছে! প্রতি ৫ সেকেন্ডে বিজ্ঞাপন দেখানো হবে...");
-      let autoAdInterval = setInterval(() => {
+    document.getElementById("autoAds").addEventListener("click", () => {
+      alert("Auto Ads শুরু হয়েছে। প্রতি 15 সেকেন্ডে বিজ্ঞাপন আসবে...");
+
+      let autoAd = setInterval(() => {
         show_8912734().then(() => {
-          addPoints(1); // প্রতি বিজ্ঞাপনে ১ পয়েন্ট
+          addPoints(10);
         }).catch(() => {
-          alert("⚠ বিজ্ঞাপন লোড করতে ব্যর্থ হয়েছে! স্বয়ংক্রিয় বিজ্ঞাপন বন্ধ করা হচ্ছে...");
-          clearInterval(autoAdInterval);
+          alert("⚠ অ্যাড লোড হয়নি! Auto Ads বন্ধ করা হলো।");
+          clearInterval(autoAd);
         });
-      }, 5000);
+      }, 15000); // 15 সেকেন্ড
 
-      let stopButton = document.createElement("button");
-      stopButton.id = "stopButton";
-      stopButton.innerText = "⛔ স্বয়ংক্রিয় বিজ্ঞাপন বন্ধ করুন";
-      document.body.appendChild(stopButton);
+      let stopBtn = document.createElement("button");
+      stopBtn.innerText = "⛔ Auto Ads বন্ধ করো";
+      stopBtn.style.margin = "15px auto";
+      stopBtn.style.padding = "10px";
+      stopBtn.style.background = "red";
+      stopBtn.style.color = "white";
+      document.body.appendChild(stopBtn);
 
-      stopButton.addEventListener("click", function () {
-        clearInterval(autoAdInterval);
-        alert("❌ স্বয়ংক্রিয় বিজ্ঞাপন বন্ধ করা হয়েছে!");
-        stopButton.remove();
+      stopBtn.addEventListener("click", () => {
+        clearInterval(autoAd);
+        alert("❌ Auto Ads বন্ধ হয়েছে!");
+        stopBtn.remove();
       });
     });
-
-    function syncWithBot(amount) {
-      const userId = localStorage.getItem("telegram_user_id");
-      if (!userId) {
-        console.warn("Telegram user ID সংরক্ষণ করা হয়নি");
-        return;
-      }
-
-      // এখানে আপনার bot.py এর API URL দিন
-      fetch(`https://your-bot-server.com/update_points`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          user_id: parseInt(userId),
-          points: amount
-        })
-      }).then(res => res.json())
-        .then(data => console.log("Bot sync:", data))
-        .catch(err => console.error("Bot error:", err));
-    }
   </script>
-
 </body>
 </html>
